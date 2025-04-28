@@ -3,18 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GameResult extends Model
 {
-    use SoftDeletes;
+    protected $fillable = ['game_id', 'result_number', 'result_date'];
 
-    protected $fillable = [
-        'game_id',
-        'result_number',
-        'result_date',
-        'status'
-    ];
+    protected $dates = ['result_date'];
 
     public function game()
     {

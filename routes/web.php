@@ -17,7 +17,7 @@ Route::get('/privacy-policy', [IndexController::class, 'privacy'])->name('privac
 Route::get('/terms-of-use', [IndexController::class, 'terms'])->name('terms-of-use.index');
 Route::get('run',[IndexController::class,'commandRunner']);
 
-
+Route::get('/game/{game}/chart', [App\Http\Controllers\Frontend\GameController::class, 'chart'])->name('game.chart');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
