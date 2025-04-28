@@ -3,14 +3,25 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Job;
 use Illuminate\Http\Request;
+use App\Models\Game;
+use Carbon\Carbon;
 
 class IndexController extends Controller
 {
     public function home(Request $request)
     {        
-        return view('frontend.home');
+        $games = Game::with(['results' => function ($query) {
+            $query->whereIn('result_date', [
+                Carbon::today()->format('Y-m-d'),
+                Carbon::yesterday()->format('Y-m-d'),
+                Carbon::yesterday()->format('Y-m-d')
+            ])
+            ->orderBy('result_date', 'desc');
+        }])->get();
+
+
+        return view('frontend.home', compact('games'));
     }
     public function help()
     {
