@@ -8288,3 +8288,133 @@ var KTLayoutToolbar = function () {
 KTUtil.onDOMContentLoaded(function () {
     KTLayoutToolbar.init();
 });
+
+
+    function updateClock() {
+      const now = new Date();
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const day = days[now.getDay()];
+      const date = ` ${now.getDate()} - ${now.getMonth() + 1} - ${now.getFullYear()}`;
+      const time = now.toLocaleTimeString();
+
+      document.getElementById('clock').textContent = time;
+      document.getElementById('date').textContent = `${day}, ${date}`;
+
+      // Greeting2 logic
+      const hour = now.getHours();
+      let greeting2 = '';
+      if (hour >= 5 && hour < 12) {
+        greeting2 = 'Good Morning!';
+      } else if (hour >= 12 && hour < 17) {
+        greeting2 = 'Good Afternoon!';
+      } else if (hour >= 17 && hour < 21) {
+        greeting2 = 'Good Evening!';
+      } else {
+        greeting2 = 'Good Night!';
+      }
+      document.getElementById('greeting2').textContent = greeting2;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call
+  
+  
+    const beforeSpin = document.getElementById('beforeSpin');
+    const spinningMessage = document.getElementById('spinningMessage');
+    const greeting = document.getElementById('greeting');
+    const spinSound = document.getElementById('spinSound');
+    beforeSpin.style.display = 'block';
+
+    function getRandomNumber() {
+      const number = Math.floor(Math.random() * 100);
+      return number.toString().padStart(2, '0');
+    }
+
+    function spin() {
+      const wheel = document.getElementById('wheel');
+
+      greeting.style.display = 'none';
+      beforeSpin.style.display = 'none';
+      spinningMessage.style.display = 'block';
+
+      spinSound.currentTime = 0;
+      spinSound.play().catch(e => console.log("Autoplay prevented", e));
+
+      const randomDegrees = 360 * 10 + Math.floor(Math.random() * 360);
+      wheel.style.transform = `rotate(${randomDegrees}deg)`;
+
+      const result = getRandomNumber();
+      setTimeout(() => {
+        wheel.style.transform = 'rotate(0deg)';
+        wheel.textContent = result;
+
+        const arrow = document.createElement('div');
+        arrow.className = 'arrow';
+        wheel.innerHTML = result;
+        wheel.appendChild(arrow);
+
+        spinningMessage.style.display = 'none';
+        greeting.style.display = 'block';
+      }, 10000);
+    }
+
+
+
+    const weeklyData = [
+      { day: 'Monday', results: { Gali: '95', Desawar: '68', Faridabad: '34', Ghaziabad: '87', DelhiBazar: '43', MumbaiMorning: '72', Ranchi: '56' } },
+      { day: 'Tuesday', results: { Gali: '23', Desawar: '54', Faridabad: '90', Ghaziabad: '41', DelhiBazar: '00', MumbaiMorning: '--', Ranchi: '78' } },
+      { day: 'Wednesday', results: { Gali: '95', Desawar: '92', Faridabad: '63', Ghaziabad: '74', DelhiBazar: '88', MumbaiMorning: '19', Ranchi: '--' } },
+      { day: 'Thursday', results: { Gali: '07', Desawar: '38', Faridabad: '--', Ghaziabad: '12', DelhiBazar: '65', MumbaiMorning: '80', Ranchi: '49' } },
+      { day: 'Friday', results: { Gali: '50', Desawar: '26', Faridabad: '19', Ghaziabad: '36', DelhiBazar: '--', MumbaiMorning: '67', Ranchi: '30' } },
+      { day: 'Saturday', results: { Gali: '29', Desawar: '13', Faridabad: '40', Ghaziabad: '05', DelhiBazar: '92', MumbaiMorning: '03', Ranchi: '--' } },
+      { day: 'Sunday', results: { Gali: '00', Desawar: '99', Faridabad: '--', Ghaziabad: '71', DelhiBazar: '44', MumbaiMorning: '58', Ranchi: '62' } }
+    ];
+
+    const gameNames = ['Gali', 'Desawar', 'Faridabad', 'Ghaziabad', 'DelhiBazar', 'MumbaiMorning', 'Ranchi'];
+
+    const chartBody = document.getElementById('chart-body');
+    const dayOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const todayIndex = new Date().getDay();
+    const yesterdayIndex = (todayIndex + 6) % 7;
+
+    const gameWiseCount = {};
+    gameNames.forEach(game => gameWiseCount[game] = {});
+
+    weeklyData.forEach(entry => {
+      const row = document.createElement('tr');
+      const entryIndex = dayOrder.indexOf(entry.day);
+
+      if (entryIndex === todayIndex) row.classList.add('today');
+      else if (entryIndex === yesterdayIndex) row.classList.add('yesterday');
+
+      let rowHTML = `<td class="week-chart">${entry.day}</td>`;
+      gameNames.forEach(game => {
+        const result = entry.results[game] || '--';
+        rowHTML += `<td class="result">${result}</td>`;
+        if (result !== '--') {
+          gameWiseCount[game][result] = (gameWiseCount[game][result] || 0) + 1;
+        }
+      });
+      row.innerHTML = rowHTML;
+      chartBody.appendChild(row);
+    });
+
+    // Determine best number (only one per game)
+    const bestRow = document.createElement('tr');
+    bestRow.classList.add('best-row');
+    let bestRowHTML = `<td>Best No</td>`;
+
+    gameNames.forEach(game => {
+      const entries = Object.entries(gameWiseCount[game]);
+      if (entries.length === 0) {
+        bestRowHTML += `<td>--</td>`;
+        return;
+      }
+      // Sort by count descending, then number ascending
+      entries.sort((a, b) => b[1] - a[1] || parseInt(a[0]) - parseInt(b[0]));
+      const best = entries[0][0];
+      bestRowHTML += `<td>${best}</td>`;
+    });
+
+    bestRow.innerHTML = bestRowHTML;
+    chartBody.appendChild(bestRow);

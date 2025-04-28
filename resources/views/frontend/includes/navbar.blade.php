@@ -46,7 +46,7 @@
                             <div class="menu-item">
                                 <!--begin::Menu link-->
                                 <a class="menu-link nav-link py-3 px-4 px-xxl-6" href="#team"
-                                    data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Blogs</a>
+                                    data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Satta King Results Live</a>
                                 <!--end::Menu link-->
                             </div>
                             <!--end::Menu item-->
@@ -83,11 +83,11 @@
                             @endguest
                         </div>
                         <!--end::Menu-->
+
                     </div>
                 </div>
                 <!--end::Menu wrapper-->
                 <!--begin::Toolbar-->
-
 
                 <div class="flex-equal text-end ms-1 d-flex justify-content-end align-items-center">
                     @auth
@@ -184,3 +184,6 @@
     </div>
     <!--end::Header-->
 </div>
+<div class="animated-text">
+      Welcome to My Website ✨
+    </div>
