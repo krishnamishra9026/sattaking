@@ -1,6 +1,5 @@
   <div class="container">
     <div class="row justify-content-center g-4">
-      <!-- Desawar - Result -->
       <div class="col-md-4">
         <div class="result-card-top">
         <div class="digital-clock d-flex align-items-center flex-column">
@@ -13,12 +12,18 @@
 
     </div>
     <div class="row justify-content-center g-4">
-
       <div class="col-md-4">
         <div class="result-card-top">
-          <h2>Desawar</h2>
-          <div class="result-number">94</div>
-        </div>
+          @php
+    // Get the latest result from all games based on game_time
+    $latestGame = $games->sortByDesc('game_time')->first();
+    $latestResult = $latestGame?->results->sortByDesc('result_date')->first();
+@endphp
+
+@if($latestGame && $latestResult)
+    <h2>{{ $latestGame->name }}</h2> <div class="result-number">{{ $latestResult->result_number }}</div>
+@endif
+</div>
       </div>
     </div>
   </div>

@@ -5,7 +5,7 @@
 <section class="py-5">
     <div class="container">
         <div class="row">
-            @foreach($games as $game)
+            @foreach($games->shuffle()->take(12) as $game)
             <div class="col-md-4 col-6">
                 <div class="result-card position-relative">
                     @if($game->results->count() > 0)
@@ -13,7 +13,7 @@
                     @endif
                     <div class="result-header">
                         <div class="result-title">{{ $game->name }}</div>
-                        <div>Time: {{ $game->game_time }}</div>
+                        <div>Time: {{ \Carbon\Carbon::parse($game->game_time)->format('h:i A') }}</div>
                         <div class="refresh-btn" onclick="location.reload()">Refresh Result</div>
                     </div>
                     <div class="result-body">
@@ -54,7 +54,7 @@
       <tr>
         <td>{{ $game->name }}</td>
         <td><b>{{ $game->results->where('result_date', Carbon\Carbon::today()->format('Y-m-d'))->first()->result_number ?? 'XX' }}</b></td>
-        <td>{{ $game->game_time }}</td>
+        <td><div>{{ \Carbon\Carbon::parse($game->game_time)->format('h:i A') }}</div></td>
       </tr>
       @endforeach
     </tbody>
@@ -107,7 +107,7 @@
         <div class="row game-row {{ $index === 0 ? 'latest-result' : ($index === 1 ? 'just-past-result' : '') }}">
             <div class="col-6">
                 <div class="game-title">{{ $game->name }}</div>
-                <div class="time">at {{ $game->game_time }} <a href="{{ route('game.chart', $game->id) }}" class="record-link">Record Chart</a></div>
+                <div class="time">at {{ \Carbon\Carbon::parse($game->game_time)->format('h:i A') }} <a href="{{ route('game.chart', $game->id) }}" class="record-link">Record Chart</a></div>
             </div>
             <div class="col-3 text-center">
                 {{ $game->results->where('result_date', $yesterday->format('Y-m-d'))->first()->result_number ?? 'XX' }}
